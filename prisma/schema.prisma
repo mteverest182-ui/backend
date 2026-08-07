@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int              @id @default(autoincrement())
+  fullname     String          @db.VarChar(255)
+  email        String           @unique @db.VarChar(255)
+  username     String           @unique @db.VarChar(255)
+  password     String           @db.VarChar(255)
+  bio          String?            @db.Text
+  image        String?             @db.VarChar(255)
+  imageId        String?             @db.VarChar(255)
+  followingCount Int @db.Integer @default(0)
+  followerCount Int @db.Integer @default(0)
+  postCount Int @db.Integer @default(0)
+  createAt DateTime @default(now())
+  post Post []
+  comments Comment[]
+  bookmarks Bookmark[]
+  likes Likes[]
+  followings Follow[] @relation("Followings")
+  followers Follow[] @relation("Followers")
+}
+
+model Post {
+  id           Int              @id @default(autoincrement())
+  userId       Int               
+  user User @relation(fields: [userId], references: [id])
+  image        String?          @db.VarChar(255)
+  imageId        String?        @db.VarChar(255)
+  caption String @db.Text
+  commentCount Int @db.Integer @default(0)
+  likeCount Int @db.Integer @default(0)
+  createAt DateTime @default(now())
+  Comments Comment[]
+  likes Likes[]
+  bookmarks Bookmark[]
+}
+
+model Comment {
+  id           Int              @id @default(autoincrement())
+  userId       Int               
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId Int
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  image        String?          @db.VarChar(255)
+  imageId        String?        @db.VarChar(255)
+  content String @db.Text
+  createAt DateTime @default(now())
+
+}
+
+model Bookmark {
+  userId       Int               
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId Int
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createAt DateTime @default(now())
+  @@id([userId, postId])
+}
+
+model Likes {
+  userId       Int               
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId Int
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createAt DateTime @default(now())
+  @@id([userId, postId])
+}
+
+model Follow {
+  followerId       Int
+  follower User @relation("Followers", fields: [followerId], references: [id])
+  followingId Int
+  following User @relation("Followings",fields: [followingId], references: [id])
+  createAt DateTime @default(now())
+  @@id([followerId, followingId])
+}

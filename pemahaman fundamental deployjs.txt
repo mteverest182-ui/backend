@@ -1,0 +1,15 @@
+pemahaman fundamental deployjs 
+
+server di bangun menggunakan node js express dengan menginstal module package manager dan juga express
+untuk menjalankan serverhttp yang di mana akan menggunakan middleware seperti prisma sebagai alternatif middleware untuk postgreSQL neondb
+
+
+kenapa node js express kita menggunakan postman dalam tutorial ini 
+
+postman berfungsi sebagai pengganti frontend kita yang dimana tidak ada kita buat untuk menguji register yang kita buat ini apakah sudah benar apa belum 
+pengkondisian nya, jadi postman berpura pura menjadi user yang memberikan request ke backend untuk menguji apakah backend kita sudah berjalan dengan benar dengan 
+mengirimkan response dengan endpoint post put patch delete
+
+server.js import dari routes/route.js 
+dan logika route.js di jalankan oleh 
+controller.js di dir controllers
