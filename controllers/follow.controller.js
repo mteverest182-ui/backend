@@ -68,7 +68,7 @@ export const followUserAccount = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      messsage: "Server Down",
+      messsage: "Tidak berhasil Follow",
       data: follow,
     });
   }
@@ -106,7 +106,7 @@ export const unfollowUserAccount = async (req, res) => {
         id: Number(unfollowUserId),
       },
       data: {
-        followingCount: {
+        followerCount: {
           increment: 1,
         },
       },
@@ -160,6 +160,50 @@ export const getLimitUser = async (req, res) => {
     res.status(500).json({
       message: "server down",
       error: error.message,
+    });
+  }
+};
+
+export const isFollowUser = async (req, res) => {
+  try {
+    const currentUser = req.user.id;
+    const { followUserId } = req.params;
+
+    const checkFollowUserId = await prisma.user.findUnique({
+      where: {
+        id: Number(followUserId),
+      },
+    });
+
+    if (!checkFollowUserId) {
+      return res.status(404).json({
+        message: "User Tidak Ditemukan",
+      });
+    }
+
+    const isFollowUserData = await prisma.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: Number(followUserId),
+          followingId: currentUser,
+        },
+      },
+    });
+
+    if (isFollowUserData) {
+      return res.status(200).json({
+        data: true,
+      });
+    }
+
+    return res.status(200).json({
+      data: false,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server Down",
+      error,
     });
   }
 };

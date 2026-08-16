@@ -15,7 +15,7 @@ export const getUserbyUsername = async (req, res) => {
         imageId: true,
       },
       include: {
-        posts: {
+        post: {
           omit: {
             userId: true,
             imageId: true,
@@ -41,7 +41,12 @@ export const getUserbyUsername = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(500).json({ message: "Server Down" });
+    console.error("GET USER ERROR:", error);
+
+    return res.status(500).json({
+      message: "Server Down",
+      error: error instanceof Error ? error.message : error,
+    });
   }
 };
 
@@ -193,11 +198,11 @@ export const updateAvatar = async (req, res) => {
       data: updateUser,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Get User Error:", error);
 
     res.status(500).json({
       message: "server Down",
-      error,
+      error: error instanceof Error ? error.message : error,
     });
   }
 };

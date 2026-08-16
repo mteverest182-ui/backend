@@ -137,8 +137,9 @@ export const detailFeed = async (req, res) => {
           },
         },
 
-        comments: {
+        Comments: {
           select: {
+            id: true,
             content: true,
             createAt: true,
             user: {
@@ -171,7 +172,7 @@ export const detailFeed = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Server Down",
-      error: message.error,
+      error,
     });
   }
 };
