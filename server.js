@@ -13,22 +13,24 @@ const app = express();
 
 const allowedOrigins = [
   "https://ecommercelux.netlify.app",
-  "https://admin-dash-lovat-nine.vercel.app"
+  "https://admin-dash-fpkofole0-mteverest182-ui.vercel.app"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    console.log("CORS Origin:", origin);
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log("CORS BLOCKED:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
 }));
 
-const port = 3000;
-
+const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/users", userRoutes);
