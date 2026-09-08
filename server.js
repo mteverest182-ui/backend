@@ -13,7 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://ecommercelux.netlify.app",
-  "https://admin-dash-fpkofole0-mteverest182-ui.vercel.app"
+  "https://admin-dash-lovat-nine.vercel.app"
 ];
 
 app.use(cors({
