@@ -1,27 +1,44 @@
 import "dotenv/config";
 import express from "express";
-import AuthRouter from "./routes/auth.route.js";
-import userRouter from "./routes/user.route.js";
-import followRouter from "./routes/follow.route.js";
-import FeedRouter from "./routes/feed.route.js";
-import commentRouter from "./routes/comment.route.js";
-import LikeRouter from "./routes/likes.route.js";
-import BookmarkRouter from "./routes/bookmark.route.js";
+import authRoutes from "./routes/auth.routes.js";
 import cors from "cors";
+import productRoutes from "./routes/product.routes.js";
+import cookieParser from "cookie-parser";
+import userRoutes from "./routes/user.routes.js";
+import categoryRoutes from "./routes/category.route.js";
+import dashboardRoutes from "./routes/dashboard.route.js";
+import bannerRoutes from "./routes/banner.routes.js";
 
 const app = express();
+
+const allowedOrigins = [
+  "https://ecommercelux.netlify.app",
+  "https://admin-dash-lovat-nine.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 const port = 3000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use("/api/users", userRoutes);
 
-app.use("/api/auth", AuthRouter);
-app.use("/api/user", userRouter);
-app.use("/api/follow", followRouter);
-app.use("/api/feed", FeedRouter);
-app.use("/api/comment", commentRouter);
-app.use("/api/like", LikeRouter);
-app.use("/api/bookmark", BookmarkRouter);
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+
+app.use("/api/categories", categoryRoutes);
+app.use("/api/banners", bannerRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.listen(port, () => {
   console.log(`server sedang berjalan di port ${port}`);
